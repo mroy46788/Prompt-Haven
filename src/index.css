@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+:root {
+  --primary-color: #6366f1;
+  --secondary-color: #0f172a;
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@theme {
+  --color-primary: var(--primary-color);
+  --color-secondary: var(--secondary-color);
+}
