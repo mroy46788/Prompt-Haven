@@ -9,6 +9,8 @@ export default function AICreationEdit() {
   const [negativePrompt, setNegativePrompt] = useState('blurry, low quality, deformed, text, watermark');
   const [isTesting, setIsTesting] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState('16:9');
+  const [modelVersion, setModelVersion] = useState('NANOBANANA - PRO v2.5');
 
   const handleTestGenerate = () => {
     setIsTesting(true);
@@ -105,7 +107,11 @@ export default function AICreationEdit() {
                 <label className="block text-sm font-medium text-slate-300 mb-3">Aspect Ratio</label>
                 <div className="grid grid-cols-3 gap-2">
                   {['1:1', '16:9', '9:16', '4:3', '3:4', '21:9'].map((ratio) => (
-                    <button key={ratio} className={`py-2 rounded-lg text-sm font-medium border transition-colors ${ratio === '16:9' ? 'bg-indigo-500/20 border-indigo-500 text-indigo-400' : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'}`}>
+                    <button 
+                      key={ratio} 
+                      onClick={() => setAspectRatio(ratio)}
+                      className={`py-2 rounded-lg text-sm font-medium border transition-colors ${ratio === aspectRatio ? 'bg-indigo-500/20 border-indigo-500 text-indigo-400' : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'}`}
+                    >
                       {ratio}
                     </button>
                   ))}
@@ -129,8 +135,12 @@ export default function AICreationEdit() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-3">Model Version</label>
-                <select className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                <label className="block text-sm font-medium text-slate-300 mb-3">Generation Parameters - Model Name</label>
+                <select 
+                  value={modelVersion}
+                  onChange={(e) => setModelVersion(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                >
                   <option>Midjourney v6.0</option>
                   <option>Midjourney v5.2</option>
                   <option>Niji v6</option>

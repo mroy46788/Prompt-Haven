@@ -27,6 +27,14 @@ export default function Admin() {
   const [pendingPrompts, setPendingPrompts] = useState<any[]>([]);
   const [editingPrompt, setEditingPrompt] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
+  useEffect(() => {
+    if (statusMessage) {
+      const timer = setTimeout(() => setStatusMessage(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [statusMessage]);
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
@@ -108,23 +116,32 @@ export default function Admin() {
     const endpoint = editingPrompt ? '/api/admin/prompts/update' : '/api/admin/prompts/add';
     const body = editingPrompt ? { id: editingPrompt.id, data } : data;
 
-    await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
+    try {
+      await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
 
-    setIsModalOpen(false);
-    setEditingPrompt(null);
-    fetchData();
+      setIsModalOpen(false);
+      setEditingPrompt(null);
+      fetchData();
+      setStatusMessage({ type: 'success', text: editingPrompt ? 'Prompt updated!' : 'Prompt added!' });
+    } catch (err) {
+      setStatusMessage({ type: 'error', text: 'Failed to save prompt.' });
+    }
   };
 
   const handleUpdateSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     const newSettings = Object.fromEntries(formData.entries());
-    await updateSettings(newSettings);
-    alert('Settings updated successfully!');
+    try {
+      await updateSettings(newSettings);
+      setStatusMessage({ type: 'success', text: 'Settings updated successfully!' });
+    } catch (err) {
+      setStatusMessage({ type: 'error', text: 'Failed to update settings.' });
+    }
   };
 
   if (!isLoggedIn) {
@@ -224,7 +241,15 @@ export default function Admin() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto p-8">
+      <div className="flex-1 overflow-y-auto p-8 relative">
+        {statusMessage && (
+          <div className={`fixed top-8 right-8 z-[60] px-6 py-3 rounded-xl shadow-2xl border flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300 ${
+            statusMessage.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' : 'bg-red-500/10 border-red-500/20 text-red-500'
+          }`}>
+            {statusMessage.type === 'success' ? <CheckCircle className="w-5 h-5" /> : <XCircle className="w-5 h-5" />}
+            <span className="font-medium">{statusMessage.text}</span>
+          </div>
+        )}
         {activeTab === 'settings' && (
           <div className="max-w-3xl">
             <h1 className="text-3xl font-bold text-white mb-8">Site Settings</h1>

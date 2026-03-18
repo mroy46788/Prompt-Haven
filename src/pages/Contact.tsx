@@ -1,6 +1,34 @@
-import { Mail, MapPin, Phone } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mail, MapPin, Phone, CheckCircle2 } from 'lucide-react';
 
 export default function Contact() {
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
+
+  if (submitted) {
+    return (
+      <div className="max-w-4xl mx-auto px-8 py-24 text-center">
+        <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-emerald-500/20">
+          <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+        </div>
+        <h1 className="text-4xl font-bold text-white mb-4">Message Sent!</h1>
+        <p className="text-slate-400 text-lg mb-8">
+          Thank you for reaching out. We've received your message and will get back to you as soon as possible.
+        </p>
+        <button 
+          onClick={() => setSubmitted(false)}
+          className="px-8 py-3 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-500 transition-all"
+        >
+          Send Another Message
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto px-8 py-16">
       <div className="text-center mb-16">
@@ -41,7 +69,7 @@ export default function Contact() {
         {/* Contact Form */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8">
           <h2 className="text-2xl font-bold text-white mb-6">Send a Message</h2>
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">
                 Name
@@ -49,6 +77,7 @@ export default function Contact() {
               <input
                 type="text"
                 id="name"
+                required
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                 placeholder="Your name"
               />
@@ -60,6 +89,7 @@ export default function Contact() {
               <input
                 type="email"
                 id="email"
+                required
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                 placeholder="your@email.com"
               />
@@ -70,6 +100,7 @@ export default function Contact() {
               </label>
               <textarea
                 id="message"
+                required
                 rows={4}
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
                 placeholder="How can we help you?"

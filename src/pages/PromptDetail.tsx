@@ -188,7 +188,7 @@ export default function PromptDetail() {
             <div className="space-y-4">
               <div className="flex items-center justify-between py-2 border-b border-slate-800/50">
                 <span className="text-slate-400 text-sm">Model</span>
-                <span className="text-slate-200 text-sm font-medium bg-slate-800 px-2 py-1 rounded">NANOBANANA - PRO</span>
+                <span className="text-slate-200 text-sm font-medium bg-slate-800 px-2 py-1 rounded">{prompt.model || 'NANOBANANA - PRO'}</span>
               </div>
             </div>
           </div>
